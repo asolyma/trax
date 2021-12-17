@@ -8,7 +8,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const salt = bcrypt.genSaltSync();
     const { email, password } = req.body;
-    let user;
+    let user: User;
     try {
       user = await prismaClient.user.create({
         data: {
@@ -25,7 +25,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     }
     const token = jwt.sign(
       { email: user.email, id: user.id, time: Date.now() },
-      "topoftheworldkiki",
+      `${process.env.TOKEN_SECRET}`,
       { expiresIn: "8h" }
     );
     res.setHeader(
