@@ -7,6 +7,12 @@ import {
   Center,
   LinkBox,
   LinkOverlay,
+  Spinner,
+  Progress,
+  Text,
+  useToast,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import {
   MdSearch,
@@ -18,6 +24,7 @@ import {
 import NextImage from "next/image";
 import NextLink from "next/link";
 import MenuListItems from "./MenuListItems";
+import usePlaylist from "../hooks/usePlaylist";
 const navMenu = [
   {
     name: "Home",
@@ -51,6 +58,8 @@ const musicMenu = [
 
 const playlists = new Array(30).fill(1).map((_, i) => `Playlist ${i + 1}`);
 const SideBar = () => {
+  const hook = usePlaylist();
+
   return (
     <Box
       position={"absolute"}
@@ -88,17 +97,37 @@ const SideBar = () => {
             },
           }}
         >
-          <List spaceing={2}>
-            {playlists.map((playlist) => (
-              <ListItem paddingX="20px" key={playlist}>
-                <LinkBox>
-                  <NextLink href="/" passHref>
-                    <LinkOverlay>{playlist}</LinkOverlay>
-                  </NextLink>
-                </LinkBox>
-              </ListItem>
-            ))}
-          </List>
+          {hook.isLoading ? (
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              alignContent={"center"}
+            >
+              <Text fontSize={"sm"} colorScheme={"gray"} padding={"5px"}>
+                Loading playlists
+              </Text>
+              <Spinner color="green.500" />
+            </Box>
+          ) : (
+            <List spaceing={2}>
+              {hook.playlists && !hook.isError ? (
+                hook.playlists.map((playlist) => (
+                  <ListItem paddingX="20px" key={playlist.id}>
+                    <LinkBox>
+                      <NextLink href="/" passHref>
+                        <LinkOverlay>{playlist.name}</LinkOverlay>
+                      </NextLink>
+                    </LinkBox>
+                  </ListItem>
+                ))
+              ) : (
+                <Alert status="error" fontSize={"x-small"} bgColor={"gray.900"}>
+                  <AlertIcon />
+                  <Text colorScheme={"gray"}>problem retrieving playlists</Text>
+                </Alert>
+              )}
+            </List>
+          )}
         </Box>
       </Box>
     </Box>

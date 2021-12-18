@@ -23,7 +23,7 @@ const signin = async (req: NextApiRequest, res: NextApiResponse) => {
       );
       res.setHeader(
         "Set-cookie",
-        cookie.serialize("T-ACCESS-TOKEN", token, {
+        cookie.serialize("T_ACCESS_TOKEN", token, {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           sameSite: "lax",

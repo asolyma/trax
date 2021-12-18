@@ -1,13 +1,18 @@
-import type { AppProps } from "next/app";
+// import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import PlayerLayout from "../components/PlayerLayout";
+import { ExtendedAppProps } from "../lib/types";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: ExtendedAppProps) {
   return (
     <ChakraProvider>
-      <PlayerLayout>
+      {Component.auth ? (
         <Component {...pageProps} />
-      </PlayerLayout>
+      ) : (
+        <PlayerLayout>
+          <Component {...pageProps} />
+        </PlayerLayout>
+      )}
     </ChakraProvider>
   );
 }
