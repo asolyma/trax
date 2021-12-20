@@ -15,6 +15,7 @@ const getBGColor = (id: number) => {
     "gray",
     "teal",
     "yellow",
+    "pink",
   ];
 
   return colors[id - 1] || colors[Math.floor(Math.random() * colors.length)];
@@ -27,12 +28,12 @@ const Playlistt: NextPage<{ playlist: Playlist & { songs: Song[] } }> = ({
       rounded={false}
       title={playlist.name}
       subTitle="playlist"
-      description={`${playlist.songs.length}`}
+      description={`${playlist.songs.length} songs in this playlist`}
       color={getBGColor(playlist.id)}
       isLoading={true}
-      image={`https://picsum.photos/400/?random=${playlist.id}`}
+      image={`https://picsum.photos/500/?random=${playlist.id}`}
     >
-      <TableComponent />
+      <TableComponent songs={playlist.songs} />
     </GradientLayout>
   );
 };
@@ -61,7 +62,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     },
   });
-  console.log(playlist);
   return {
     props: { playlist }, // will be passed to the page component as props
   };

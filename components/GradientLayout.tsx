@@ -47,7 +47,7 @@ const GradientLayout: React.FC<{
           <Box padding={"30px"}>
             <Image
               alt="avatar"
-              boxSize={"160px"}
+              boxSize={"200px"}
               boxShadow={"2xl"}
               src={image}
               borderRadius={rounded ? "100%" : "none"}
