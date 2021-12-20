@@ -37,6 +37,8 @@ const run = async () => {
       lastname: "Soliman",
     },
   });
+  const songs = await prismaClient.song.findMany({});
+
   await Promise.all(
     new Array(10).fill(1).map(async (_, index) => {
       return prismaClient.playlist.create({
@@ -46,6 +48,13 @@ const run = async () => {
             connect: {
               id: user.id,
             },
+          },
+          songs: {
+            connect: songs.map((song) => {
+              return {
+                id: song.id,
+              };
+            }),
           },
         },
       });

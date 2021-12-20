@@ -1,6 +1,7 @@
 import { Playlist, Song } from "@prisma/client";
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import GradientLayout from "../../components/GradientLayout";
+import TableComponent from "../../components/TableComponent";
 import { validateToken } from "../../lib/auth";
 import { prismaClient } from "../../lib/prisma";
 
@@ -18,7 +19,7 @@ const getBGColor = (id: number) => {
 
   return colors[id - 1] || colors[Math.floor(Math.random() * colors.length)];
 };
-const Playlist: NextPage<{ playlist: Playlist & { songs: Song[] } }> = ({
+const Playlistt: NextPage<{ playlist: Playlist & { songs: Song[] } }> = ({
   playlist,
 }) => {
   return (
@@ -29,14 +30,14 @@ const Playlist: NextPage<{ playlist: Playlist & { songs: Song[] } }> = ({
       description={`${playlist.songs.length}`}
       color={getBGColor(playlist.id)}
       isLoading={true}
-      image="https://picsum.photos/400"
+      image={`https://picsum.photos/400/?random=${playlist.id}`}
     >
-      <h1>{playlist?.name}</h1>
+      <TableComponent />
     </GradientLayout>
   );
 };
 
-export default Playlist;
+export default Playlistt;
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
@@ -50,19 +51,18 @@ export const getServerSideProps: GetServerSideProps = async ({
     },
     include: {
       songs: {
-        include: {
-          artist: {
-            select: {
-              name: true,
-              id: true,
-            },
-          },
+        select: {
+          artist: true,
+          duration: true,
+          url: true,
+          name: true,
+          createdAt: true,
         },
       },
     },
   });
   console.log(playlist);
   return {
-    props: { playlist: {} }, // will be passed to the page component as props
+    props: { playlist }, // will be passed to the page component as props
   };
 };
