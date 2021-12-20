@@ -17,6 +17,7 @@ const validateAuth = (
         user = await prismaClient.user.findUnique({
           where: { id: user.id },
         });
+
         if (!user) {
           throw new Error("Not a real User");
         }
@@ -31,3 +32,8 @@ const validateAuth = (
 };
 
 export default validateAuth;
+
+export const validateToken = (token: string) => {
+  const user = jwt.verify(token, `${process.env.TOKEN_SECRET}`) as jwtUser;
+  return user;
+};

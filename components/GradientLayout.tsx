@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Image } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Skeleton } from "@chakra-ui/react";
 import { ReactChildren, ReactElement, ReactNode } from "react";
 
 const GradientLayout: React.FC<{
@@ -9,7 +9,17 @@ const GradientLayout: React.FC<{
   rounded: boolean;
   subTitle: string;
   children: ReactNode;
-}> = ({ image, title, subTitle, description, color, rounded, children }) => {
+  isLoading: boolean;
+}> = ({
+  image,
+  title,
+  subTitle,
+  description,
+  color,
+  rounded,
+  children,
+  isLoading,
+}) => {
   return (
     <Box
       height={"100%"}
@@ -28,28 +38,34 @@ const GradientLayout: React.FC<{
         },
       }}
     >
-      <Flex bgColor={`${color}.600`} padding={"40px"} align={"end"}>
-        <Box padding={"30px"}>
-          <Image
-            alt="avatar"
-            boxSize={"160px"}
-            boxShadow={"2xl"}
-            src={image}
-            borderRadius={rounded ? "100%" : "none"}
-          />
-        </Box>
-        <Box padding={"px"} lineHeight={"40px"} color={"white"}>
-          <Text fontSize={"xs"} fontWeight={"bold"} casing={"uppercase"}>
-            {subTitle}
-          </Text>
-          <Text fontSize={"6xl"} fontWeight={"bold"}>
-            {title}
-          </Text>
-          <Text fontSize={"xs"} fontWeight={"100"} color={"whiteAlpha.700"}>
-            {description}
-          </Text>
-        </Box>
-      </Flex>
+      <Skeleton
+        isLoaded={isLoading}
+        startColor={`${color}.500`}
+        endColor={`${color}.900`}
+      >
+        <Flex bgColor={`${color}.600`} padding={"40px"} align={"end"}>
+          <Box padding={"30px"}>
+            <Image
+              alt="avatar"
+              boxSize={"160px"}
+              boxShadow={"2xl"}
+              src={image}
+              borderRadius={rounded ? "100%" : "none"}
+            />
+          </Box>
+          <Box padding={"px"} lineHeight={"40px"} color={"white"}>
+            <Text fontSize={"xs"} fontWeight={"bold"} casing={"uppercase"}>
+              {subTitle}
+            </Text>
+            <Text fontSize={"6xl"} fontWeight={"bold"}>
+              {title}
+            </Text>
+            <Text fontSize={"xs"} fontWeight={"100"} color={"whiteAlpha.700"}>
+              {description}
+            </Text>
+          </Box>
+        </Flex>
+      </Skeleton>
       <Box paddingY={"50px"}>{children}</Box>
     </Box>
   );

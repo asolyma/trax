@@ -33,9 +33,10 @@ const run = async () => {
     create: {
       email: "asolyma@hotmail.com",
       password: bcrypt.hashSync("password", salt),
+      firstname: "Amr",
+      lastname: "Soliman",
     },
   });
-  const songs = await prismaClient.song.findMany({});
   await Promise.all(
     new Array(10).fill(1).map(async (_, index) => {
       return prismaClient.playlist.create({
