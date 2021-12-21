@@ -2,17 +2,21 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import PlayerLayout from "../components/PlayerLayout";
 import { ExtendedAppProps } from "../lib/types";
+import { StoreProvider } from "easy-peasy";
+import store from "../lib/store";
 
 function MyApp({ Component, pageProps }: ExtendedAppProps) {
   return (
     <ChakraProvider>
-      {Component.auth ? (
-        <Component {...pageProps} />
-      ) : (
-        <PlayerLayout>
+      <StoreProvider store={store}>
+        {Component.auth ? (
           <Component {...pageProps} />
-        </PlayerLayout>
-      )}
+        ) : (
+          <PlayerLayout>
+            <Component {...pageProps} />
+          </PlayerLayout>
+        )}
+      </StoreProvider>
     </ChakraProvider>
   );
 }

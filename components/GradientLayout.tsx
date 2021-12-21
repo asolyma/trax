@@ -50,11 +50,16 @@ const GradientLayout: React.FC<{
               boxSize={"200px"}
               boxShadow={"2xl"}
               src={image}
-              borderRadius={rounded ? "100%" : "none"}
+              borderRadius={rounded ? "50%" : "none"}
             />
           </Box>
           <Box padding={"px"} lineHeight={"40px"} color={"white"}>
-            <Text fontSize={"xs"} fontWeight={"bold"} casing={"uppercase"}>
+            <Text
+              fontSize={"x-small"}
+              fontWeight={"bold"}
+              casing={"uppercase"}
+              marginBottom={"20px"}
+            >
               {subTitle}
             </Text>
             <Text fontSize={"6xl"} fontWeight={"bold"}>

@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { AppProps } from "next/app";
 import { NextApiHandler } from "next";
-import { User } from "@prisma/client";
+import { Song, User } from "@prisma/client";
+import { Action } from "easy-peasy";
 
 export enum authMode {
   SIGNIN = "signin",
@@ -29,4 +30,11 @@ export interface jwtUser {
   time: number;
   iat: number;
   exp: number;
+}
+
+export interface StoreModel {
+  activeSongs: Song[];
+  activeSong: Song | null;
+  changeActiveSong: Action<StoreModel, Song>;
+  changeActiveSongs: Action<StoreModel, Song[]>;
 }

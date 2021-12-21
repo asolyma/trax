@@ -9,7 +9,6 @@ export default function middleware(req: NextRequest) {
       return NextResponse.redirect("/signin");
     } else {
       const valid = jwt.verify(token, `${process.env.TOKEN_SECRET}`);
-      console.log(valid);
       return;
     }
   }

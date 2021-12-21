@@ -64,7 +64,7 @@ const run = async () => {
 
 run()
   .catch((e) => {
-    console.log(e);
+    // console.log(e);
     process.exit(1);
   })
   .finally(async () => {

@@ -16,11 +16,11 @@ const Home: NextPage<{ artists: Artist[]; error: any }> = ({
   return (
     <GradientLayout
       image="https://avatars.githubusercontent.com/u/72451431?v=4"
-      color="purple"
+      color="gray"
       rounded
       title={`${user?.firstname} ${user?.lastname}`}
       isLoading={(!isLoading && user) as boolean}
-      subTitle="Welcome user"
+      subTitle="Profile"
       description={`${user?.playlistcount} public playlists`}
     >
       <Box color={"whitesmoke"} paddingX={"40px"}>

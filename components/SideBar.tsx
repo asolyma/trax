@@ -112,7 +112,7 @@ const SideBar = () => {
             <List spaceing={2}>
               {hook.playlists && !hook.isError ? (
                 hook.playlists.map((playlist) => (
-                  <ListItem paddingX="20px" key={playlist.id}>
+                  <ListItem paddingX="20px" key={playlist.id} fontSize={"sm"}>
                     <LinkBox>
                       <NextLink
                         href={{
