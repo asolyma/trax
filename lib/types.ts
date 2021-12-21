@@ -1,7 +1,8 @@
+import { createTypedHooks } from "easy-peasy";
 import { NextApiRequest, NextApiResponse, NextPage } from "next";
 import { AppProps } from "next/app";
 import { NextApiHandler } from "next";
-import { Song, User } from "@prisma/client";
+import { Artist, Song, User } from "@prisma/client";
 import { Action } from "easy-peasy";
 
 export enum authMode {
@@ -31,10 +32,24 @@ export interface jwtUser {
   iat: number;
   exp: number;
 }
+export interface SongsWithArtist {
+  artist: Artist;
+  duration: number;
+  url: string;
+  name: string;
+  createdAt: Date;
+}
+[];
 
 export interface StoreModel {
-  activeSongs: Song[];
-  activeSong: Song | null;
-  changeActiveSong: Action<StoreModel, Song>;
-  changeActiveSongs: Action<StoreModel, Song[]>;
+  activeSongs: SongsWithArtist[];
+  activeSong: SongsWithArtist | null;
+  changeActiveSong: Action<StoreModel, SongsWithArtist>;
+  changeActiveSongs: Action<StoreModel, SongsWithArtist[]>;
 }
+
+const typedHooks = createTypedHooks<StoreModel>();
+
+export const useStoreActions = typedHooks.useStoreActions;
+export const useStoreDispatch = typedHooks.useStoreDispatch;
+export const useStoreState = typedHooks.useStoreState;

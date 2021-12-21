@@ -1,4 +1,4 @@
-import { Playlist, Song, User } from "@prisma/client";
+import { Artist, Playlist, Song, User } from "@prisma/client";
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import GradientLayout from "../../components/GradientLayout";
 import TableComponent from "../../components/TableComponent";
@@ -21,9 +21,17 @@ const getBGColor = (id: number) => {
 
   return colors[id - 1] || colors[Math.floor(Math.random() * colors.length)];
 };
-const Playlistt: NextPage<{ playlist: Playlist & { songs: Song[] } }> = ({
-  playlist,
-}) => {
+const Playlistt: NextPage<{
+  playlist: Playlist & {
+    songs: {
+      artist: Artist;
+      duration: number;
+      url: string;
+      name: string;
+      createdAt: Date;
+    }[];
+  };
+}> = ({ playlist }) => {
   return (
     <GradientLayout
       rounded={false}
@@ -73,7 +81,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       redirect: {
         permanent: true,
-        statusCode: 401,
         destination: "/signin",
       },
     };

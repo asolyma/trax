@@ -1,6 +1,5 @@
-import { createStore, computed, action, thunk } from "easy-peasy";
+import { createStore, action } from "easy-peasy";
 import { StoreModel } from "../lib/types";
-
 const store = createStore<StoreModel>({
   activeSongs: [],
   activeSong: null,

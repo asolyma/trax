@@ -13,7 +13,18 @@ import TimeAgo from "react-timeago";
 import { BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { Song } from "@prisma/client";
-const Songtable: React.FC<{ songs: Song[] }> = ({ songs }) => {
+import { SongsWithArtist, useStoreActions } from "../lib/types";
+const Songtable: React.FC<{ songs: SongsWithArtist[] }> = ({ songs }) => {
+  const changeActiveSong = useStoreActions((actions) => {
+    return actions.changeActiveSong;
+  });
+  const changeActiveSongs = useStoreActions((actions) => {
+    return actions.changeActiveSongs;
+  });
+  const handlePLay = (activeSong?: SongsWithArtist) => {
+    changeActiveSong(activeSong || songs[0]);
+    changeActiveSongs(songs);
+  };
   return (
     <Box bg={"transparent"} color={"white"}>
       <Box padding={"10px"} marginBottom={"30px"} marginLeft={"20px"}>
@@ -23,6 +34,9 @@ const Songtable: React.FC<{ songs: Song[] }> = ({ songs }) => {
           colorScheme={"green"}
           size={"lg"}
           icon={<BsFillPlayFill fontSize={"30px"} />}
+          onClick={() => {
+            handlePLay();
+          }}
         />
         <Table variant={"unstyled"}>
           <Thead
@@ -49,6 +63,10 @@ const Songtable: React.FC<{ songs: Song[] }> = ({ songs }) => {
                       bg: "rgba(255,255,255,.1)",
                     },
                   }}
+                  onClick={() => {
+                    handlePLay(song);
+                  }}
+                  cursor={"pointer"}
                 >
                   <Td>{i + 1}</Td>
                   <Td>{song.name}</Td>

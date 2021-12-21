@@ -25,53 +25,91 @@ import {
   MdRepeat,
 } from "react-icons/md";
 import { useStoreActions } from "easy-peasy";
-const Player: React.FC = () => {
+import { Song } from "@prisma/client";
+import { SongsWithArtist } from "../lib/types";
+const Player: React.FC<{
+  songs: SongsWithArtist[];
+  activeSong: SongsWithArtist;
+}> = ({ songs, activeSong }) => {
+  const [playing, setPlaying] = useState(true);
+  const [index, setIndex] = useState(0);
+  const [seek, setSeek] = useState(0.0);
+  const [repeat, setRepeat] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
+  const [duration, setDuration] = useState(0.0);
   return (
     <Box>
-      <Box>{/* <ReactHowler/> */}</Box>
+      <Box>{/* <ReactHowler playing={playing} src={activeSong.url} /> */}</Box>
       <Center color={"gray.600"}>
         <ButtonGroup>
           <IconButton
             aria-label="shuffle"
             fontSize={"25px"}
+            color={shuffle ? "white" : ""}
             icon={<MdShuffle />}
-            outline={"none"}
-            variant={"link"}
+            _focus={{ boxShadow: "none" }}
+            onClick={() => {
+              setShuffle(!shuffle);
+            }}
+            variant="link"
           />
           <IconButton
             aria-label="skip-previous"
             fontSize={"25px"}
             icon={<MdSkipPrevious />}
-            outline={"none"}
-            variant={"link"}
+            _focus={{ boxShadow: "none" }}
+            variant="link"
           />
-          <IconButton
-            aria-label="play"
-            fontSize={"25px"}
-            icon={<MdOutlinePlayCircleFilled fontSize={"40"} color={"white"} />}
-            outline={"none"}
-            variant={"link"}
-          />
-          <IconButton
-            aria-label="pause"
-            fontSize={"25px"}
-            icon={<MdOutlinePauseCircleFilled fontSize={"40"} color="white" />}
-            outline={"none"}
-            variant={"link"}
-          />
+          {!playing ? (
+            <IconButton
+              aria-label="play"
+              fontSize={"25px"}
+              icon={
+                <MdOutlinePlayCircleFilled fontSize={"40"} color={"white"} />
+              }
+              variant="link"
+              onClick={() => {
+                setPlaying(() => {
+                  return true;
+                });
+              }}
+              _focus={{ boxShadow: "none" }}
+            />
+          ) : (
+            <IconButton
+              aria-label="pause"
+              fontSize={"25px"}
+              icon={
+                <MdOutlinePauseCircleFilled fontSize={"40"} color="white" />
+              }
+              _focus={{ boxShadow: "none" }}
+              variant="link"
+              onClick={() => {
+                setPlaying(() => {
+                  return false;
+                });
+              }}
+            />
+          )}
           <IconButton
             aria-label="skip-next"
             fontSize={"25px"}
             icon={<MdSkipNext fontSize={"25"} />}
-            outline={"none"}
-            variant={"link"}
+            _focus={{ boxShadow: "none" }}
+            variant="link"
           />
           <IconButton
             aria-label="repeat"
             fontSize={"25px"}
             icon={<MdRepeat fontSize={"25"} />}
-            outline={"none"}
-            variant={"link"}
+            _focus={{ boxShadow: "none" }}
+            variant="link"
+            color={repeat ? "white" : ""}
+            onClick={() => {
+              setRepeat((state) => {
+                return !state;
+              });
+            }}
           />
         </ButtonGroup>
       </Center>
@@ -90,7 +128,10 @@ const Player: React.FC = () => {
               color={"teal"}
             >
               <RangeSliderTrack bg="teal.600">
-                <RangeSliderFilledTrack bg="teal.200"></RangeSliderFilledTrack>
+                <RangeSliderFilledTrack
+                  bg="teal.200"
+                  id="rangeSlider"
+                ></RangeSliderFilledTrack>
               </RangeSliderTrack>
               {/* <RangeSliderThumb index={0} /> */}
             </RangeSlider>
