@@ -34,17 +34,26 @@ const Home: NextPage<{ artists: Artist[]; error: any }> = ({
           <Flex gap={"10px"} width={"100%"}>
             {artists?.map((artist) => (
               <Box
-                width="20%"
+                width="15%"
                 bgColor={"gray.900"}
                 padding="15px"
                 key={artist.id}
                 rounded={"5px"}
               >
-                <Image
-                  alt={artist.name}
-                  src={"https://avatars.githubusercontent.com/u/72451431?v=4"}
-                  borderRadius={"100%"}
-                />
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignContent={"center"}
+                  width={"100%"}
+                >
+                  <Image
+                    alt={artist.name}
+                    boxSize={"160px"}
+                    src={artist.avatar}
+                    borderRadius={"100%"}
+                    marginBottom={"30px"}
+                  />
+                </Box>
                 <Box marginTop={"20px"}>
                   <Text fontSize={"xl"}>{artist.name}</Text>
                   <Text color={"whiteAlpha.500"} fontSize={"xs"}>
@@ -67,6 +76,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       select: {
         id: true,
         name: true,
+        avatar: true,
         songs: { select: { id: true, duration: true, url: true, name: true } },
       },
     });

@@ -29,6 +29,7 @@ CREATE TABLE "Artist" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "avatar" TEXT NOT NULL DEFAULT E'',
     "name" TEXT NOT NULL,
 
     CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")

@@ -42,10 +42,12 @@ export interface SongsWithArtist {
 [];
 
 export interface StoreModel {
+  volume: number;
   activeSongs: SongsWithArtist[];
   activeSong: SongsWithArtist | null;
   changeActiveSong: Action<StoreModel, SongsWithArtist>;
   changeActiveSongs: Action<StoreModel, SongsWithArtist[]>;
+  chanevolume: Action<StoreModel, number>;
 }
 
 const typedHooks = createTypedHooks<StoreModel>();

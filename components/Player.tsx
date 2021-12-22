@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import ReactHowler from "react-howler";
 
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   MdShuffle,
   MdSkipPrevious,
@@ -24,22 +24,94 @@ import {
   MdOutlineSkipNext,
   MdRepeat,
 } from "react-icons/md";
-import { useStoreActions } from "easy-peasy";
+import { durationFormatter } from "../lib/formatters";
+import { Store, useStoreActions } from "easy-peasy";
 import { Song } from "@prisma/client";
-import { SongsWithArtist } from "../lib/types";
+import { SongsWithArtist, StoreModel, useStoreState } from "../lib/types";
+import next from "next";
 const Player: React.FC<{
   songs: SongsWithArtist[];
   activeSong: SongsWithArtist;
 }> = ({ songs, activeSong }) => {
   const [playing, setPlaying] = useState(true);
-  const [index, setIndex] = useState(0);
+  const i = songs.findIndex((song) => {
+    // console.log(song.name, "hi");
+    return song.name === activeSong.name;
+  });
+  const [index, setIndex] = useState(i);
   const [seek, setSeek] = useState(0.0);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [duration, setDuration] = useState(0.0);
+  const soundRef = useRef<ReactHowler>(null);
+  const [isSeeking, setIsSeeking] = useState(false);
+  const activesong = useStoreActions<StoreModel>(
+    (state) => state.changeActiveSong
+  );
+  const volume = useStoreState((state) => state.volume);
+  const nextSong = () => {
+    setIndex((index) => {
+      if (shuffle) {
+        const next = Math.floor(Math.random() * songs.length);
+        if (next === index) {
+          nextSong();
+        }
+        return next;
+      } else {
+        return index === songs.length - 1 ? 0 : index++;
+      }
+    });
+  };
+  const onEnd = () => {
+    if (repeat) {
+      setSeek(0);
+      soundRef.current?.seek(0);
+    } else {
+      nextSong();
+    }
+  };
+  const onload = () => {
+    const songDuration = soundRef.current?.duration();
+    if (songDuration) {
+      setDuration(songDuration);
+    } else {
+      return;
+    }
+  };
+
+  const onSeek = (e: number[]) => {
+    setSeek(parseFloat(`${e[0]}`));
+    soundRef.current?.seek(parseFloat(`${e[0]}`));
+  };
+
+  useEffect(() => {
+    let timer: number;
+    if (playing && !isSeeking) {
+      const f = () => {
+        setSeek(soundRef.current?.seek()!);
+        timer = requestAnimationFrame(f);
+      };
+      timer = requestAnimationFrame(f);
+      return () => cancelAnimationFrame(timer);
+    }
+    return () => cancelAnimationFrame(timer);
+  }, [playing, isSeeking]);
+
+  useEffect(() => {
+    activesong(songs[index]);
+  }, [index, songs, activesong]);
   return (
     <Box>
-      <Box>{/* <ReactHowler playing={playing} src={activeSong.url} /> */}</Box>
+      <Box>
+        <ReactHowler
+          ref={soundRef}
+          playing={playing}
+          src={activeSong.url}
+          onEnd={onEnd}
+          onLoad={onload}
+          volume={volume}
+        />
+      </Box>
       <Center color={"gray.600"}>
         <ButtonGroup>
           <IconButton
@@ -59,6 +131,11 @@ const Player: React.FC<{
             icon={<MdSkipPrevious />}
             _focus={{ boxShadow: "none" }}
             variant="link"
+            onClick={() => {
+              setIndex((index) => {
+                return index ? index - 1 : songs.length - 1;
+              });
+            }}
           />
           {!playing ? (
             <IconButton
@@ -97,6 +174,11 @@ const Player: React.FC<{
             icon={<MdSkipNext fontSize={"25"} />}
             _focus={{ boxShadow: "none" }}
             variant="link"
+            onClick={() => {
+              setIndex((index) => {
+                return index + 1;
+              });
+            }}
           />
           <IconButton
             aria-label="repeat"
@@ -116,7 +198,7 @@ const Player: React.FC<{
       <Box color={"gray.600"}>
         <Flex justify={"center"} align={"center"}>
           <Box fontSize={"xs"} width={"10%"} textAlign={"left"}>
-            <Text>00</Text>
+            <Text>{durationFormatter(seek)}</Text>
           </Box>
           <Box width={"80%"}>
             <RangeSlider
@@ -124,12 +206,20 @@ const Player: React.FC<{
               aria-label={["min", "max"]}
               step={0.1}
               min={0}
-              max={300}
               color={"teal"}
+              max={duration ? +duration.toFixed() : 0}
+              onChange={onSeek}
+              value={[seek]}
+              onChangeStart={() => {
+                setIsSeeking((state) => true);
+              }}
+              onChangeEnd={() => {
+                setIsSeeking((state) => false);
+              }}
             >
               <RangeSliderTrack bg="teal.600">
                 <RangeSliderFilledTrack
-                  bg="teal.200"
+                  bg="teal.100"
                   id="rangeSlider"
                 ></RangeSliderFilledTrack>
               </RangeSliderTrack>
@@ -138,7 +228,7 @@ const Player: React.FC<{
           </Box>
 
           <Box fontSize={"xs"} width={"10%"} textAlign={"right"}>
-            <Text>00</Text>
+            <Text>{durationFormatter(duration)}</Text>
           </Box>
         </Flex>
       </Box>

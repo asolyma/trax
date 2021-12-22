@@ -43,7 +43,7 @@ const run = async () => {
     new Array(10).fill(1).map(async (_, index) => {
       return prismaClient.playlist.create({
         data: {
-          name: `playlist #${index + 1}`,
+          name: `Myplaylist #${index + 1}`,
           user: {
             connect: {
               id: user.id,

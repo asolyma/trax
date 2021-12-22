@@ -7,6 +7,7 @@ import {
   Tbody,
   Th,
   IconButton,
+  Image,
 } from "@chakra-ui/react";
 import { durationFormatter } from "../lib/formatters";
 import TimeAgo from "react-timeago";
@@ -69,6 +70,7 @@ const Songtable: React.FC<{ songs: SongsWithArtist[] }> = ({ songs }) => {
                   cursor={"pointer"}
                 >
                   <Td>{i + 1}</Td>
+
                   <Td>{song.name}</Td>
                   <Td>
                     {<TimeAgo date={song.createdAt.toLocaleDateString()} />}
