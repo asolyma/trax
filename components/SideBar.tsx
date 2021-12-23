@@ -34,12 +34,12 @@ const navMenu = [
   {
     name: "Search",
     icon: MdSearch,
-    route: "/search",
+    route: "/",
   },
   {
     name: "Your Library",
     icon: MdLibraryMusic,
-    route: "/library",
+    route: "/",
   },
 ];
 
@@ -52,7 +52,7 @@ const musicMenu = [
   {
     name: "Favorites",
     icon: MdFavorite,
-    route: "/favorites",
+    route: "/",
   },
 ];
 
