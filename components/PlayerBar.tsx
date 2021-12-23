@@ -18,6 +18,7 @@ import { Song } from "@prisma/client";
 import { useState } from "react";
 const PlayerBar = () => {
   const volume = useStoreState((state) => state.volume);
+  const [mute, setMute] = useState(true);
   const activesong = useStoreState((state) => state.activeSong);
   const setVolume = useStoreActions((action) => action.chanevolume);
   const activeSong = useStoreState((state) => state.activeSong);
@@ -60,8 +61,13 @@ const PlayerBar = () => {
               alignItems={"center"}
               marginX={"20px"}
             >
-              {volume > 0.1 ? (
-                <Icon color={"gray.600"} as={FiVolume2} fontSize={"25px"} />
+              {volume > 0.01 ? (
+                <Icon
+                  cursor={"pointer"}
+                  color={"gray.600"}
+                  as={FiVolume2}
+                  fontSize={"25px"}
+                />
               ) : (
                 <Icon color={"gray.400"} as={HiVolumeOff} fontSize={"25px"} />
               )}
@@ -71,7 +77,7 @@ const PlayerBar = () => {
                 id="slider-track-1"
                 defaultValue={30}
                 min={0}
-                max={3}
+                max={1}
                 step={0.1}
                 onChange={(e) => {
                   setVolume(e);

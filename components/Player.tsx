@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import ReactHowler from "react-howler";
 
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MdShuffle,
   MdSkipPrevious,
@@ -34,8 +34,8 @@ const Player: React.FC<{
   activeSong: SongsWithArtist;
 }> = ({ songs, activeSong }) => {
   const [playing, setPlaying] = useState(true);
+  //finding index of the active song
   const i = songs.findIndex((song) => {
-    // console.log(song.name, "hi");
     return song.name === activeSong.name;
   });
   const [index, setIndex] = useState(i);
@@ -44,36 +44,28 @@ const Player: React.FC<{
   const [shuffle, setShuffle] = useState(false);
   const [duration, setDuration] = useState(0.0);
   const soundRef = useRef<ReactHowler>(null);
+  const repeatRef = useRef(repeat);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const activesong = useStoreActions<StoreModel>(
     (state) => state.changeActiveSong
   );
   const volume = useStoreState((state) => state.volume);
-  const nextSong = () => {
-    setIndex((index) => {
-      if (shuffle) {
-        const next = Math.floor(Math.random() * songs.length);
-        if (next === index) {
-          nextSong();
-        }
-        return next;
-      } else {
-        return index === songs.length - 1 ? 0 : index++;
-      }
-    });
-  };
+
   const onEnd = () => {
-    if (repeat) {
+    if (repeatRef.current) {
       setSeek(0);
       soundRef.current?.seek(0);
     } else {
       nextSong();
     }
   };
+
   const onload = () => {
     const songDuration = soundRef.current?.duration();
     if (songDuration) {
       setDuration(songDuration);
+      setLoaded((loaded) => true);
     } else {
       return;
     }
@@ -100,6 +92,23 @@ const Player: React.FC<{
   useEffect(() => {
     activesong(songs[index]);
   }, [index, songs, activesong]);
+
+  useEffect(() => {
+    repeatRef.current = repeat;
+  }, [repeat]);
+  const nextSong = () => {
+    setIndex((index) => {
+      if (shuffle) {
+        const next = Math.floor(Math.random() * songs.length);
+        if (next === index) {
+          nextSong();
+        }
+        return next;
+      } else {
+        return index === songs.length - 1 ? 0 : index + 1;
+      }
+    });
+  };
   return (
     <Box>
       <Box>
