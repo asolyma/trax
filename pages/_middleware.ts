@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+/*import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 const signedinPages = ["/", "/playlist", "library"];
@@ -12,4 +12,4 @@ export default function middleware(req: NextRequest) {
       return;
     }
   }
-}
+}*/
